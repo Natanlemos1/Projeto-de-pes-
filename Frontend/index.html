@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tela de acesso ao sistema" />
+    <title>Login | Representações Sansana</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        --primary: #2457d6;
+        --primary-hover: #1748c1;
+        --text: #182238;
+        --muted: #657089;
+        --border: #dbe2ef;
+        --error: #b42318;
+        --error-bg: #fff1f0;
+        --surface: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top right, rgba(36, 87, 214, 0.14), transparent 34rem),
+          #f4f7fc;
+      }
+
+      .login-page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 480px);
+      }
+
+      .brand-panel {
+        display: flex;
+        align-items: flex-end;
+        padding: clamp(2rem, 8vw, 6rem);
+        color: #ffffff;
+        background: linear-gradient(145deg, #163d9f 0%, #2457d6 58%, #5b7fe0 100%);
+      }
+
+      .brand-panel__content {
+        max-width: 34rem;
+      }
+
+      .brand-panel h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(2rem, 5vw, 4.5rem);
+        line-height: 1;
+      }
+
+      .brand-panel p {
+        max-width: 31rem;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        line-height: 1.6;
+      }
+
+      .login-panel {
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        background: var(--surface);
+      }
+
+      .login-card {
+        width: min(100%, 360px);
+      }
+
+      .login-card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 2rem;
+      }
+
+      .login-card__subtitle {
+        margin: 0 0 2rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .form-field {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-field label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      .form-field input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: var(--text);
+        background: #ffffff;
+        font: inherit;
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+
+      .form-field input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(36, 87, 214, 0.12);
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+
+      .password-wrapper input {
+        padding-right: 4.5rem;
+      }
+
+      .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 0.5rem;
+        min-width: 3.5rem;
+        min-height: 36px;
+        border: 0;
+        border-radius: 6px;
+        color: var(--primary);
+        background: transparent;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transform: translateY(-50%);
+      }
+
+      .toggle-password:focus-visible,
+      .submit-button:focus-visible {
+        outline: 3px solid rgba(36, 87, 214, 0.28);
+        outline-offset: 2px;
+      }
+
+      .submit-button {
+        width: 100%;
+        min-height: 48px;
+        border: 0;
+        border-radius: 8px;
+        color: #ffffff;
+        background: var(--primary);
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 150ms ease, transform 150ms ease;
+      }
+
+      .submit-button:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      .submit-button:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+
+      .submit-button:disabled {
+        cursor: wait;
+        opacity: 0.7;
+      }
+
+      .status-message {
+        min-height: 44px;
+        margin: 1rem 0 0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        line-height: 1.25;
+      }
+
+      .status-message[hidden] {
+        display: none;
+      }
+
+      .status-message--error {
+        border: 1px solid #fecaca;
+        color: var(--error);
+        background: var(--error-bg);
+      }
+
+      .status-message--success {
+        border: 1px solid #a7e3be;
+        color: #176a35;
+        background: #effaf3;
+      }
+
+      .demo-note {
+        margin: 1.5rem 0 0;
+        color: var(--muted);
+        font-size: 0.875rem;
+        text-align: center;
+      }
+
+      @media (max-width: 760px) {
+        .login-page {
+          grid-template-columns: 1fr;
+        }
+
+        .brand-panel {
+          min-height: 220px;
+          align-items: center;
+          padding: 2rem;
+        }
+
+        .brand-panel h1 {
+          font-size: 2.25rem;
+        }
+
+        .brand-panel p {
+          display: none;
+        }
+
+        .login-panel {
+          align-items: start;
+          padding-top: 3rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="login-page">
+      <section class="brand-panel" aria-label="Apresentação do sistema">
+        <div class="brand-panel__content">
+          <h1>Representações Comerciais Sansana Ltda.</h1>
+          <p>Acesso seguro para representantes comerciais e equipes internas.</p>
+        </div>
+      </section>
+
+      <section class="login-panel" aria-labelledby="login-title">
+        <div class="login-card">
+          <h2 id="login-title">Entrar</h2>
+          <p class="login-card__subtitle">Informe seus dados para acessar o sistema.</p>
+
+          <form id="login-form" novalidate>
+            <div class="form-field">
+              <label for="email">E-mail</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                maxlength="254"
+                required
+                aria-describedby="login-status"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="password">Senha</label>
+              <div class="password-wrapper">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  minlength="6"
+                  maxlength="128"
+                  required
+                  aria-describedby="login-status"
+                />
+                <button
+                  id="toggle-password"
+                  class="toggle-password"
+                  type="button"
+                  aria-controls="password"
+                  aria-label="Mostrar senha"
+                >
+                  Mostrar
+                </button>
+              </div>
+            </div>
+
+            <button id="submit-button" class="submit-button" type="submit">
+              Entrar
+            </button>
+          </form>
+
+          <p id="login-status" class="status-message" role="status" aria-live="polite" hidden></p>
+          <p class="demo-note">Modo demonstração: não é necessário usar dados reais.</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/login.js"></script>
+  </body>
+</html>
